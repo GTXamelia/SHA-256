@@ -5,6 +5,13 @@
 
 void sha256();
 
+// See section 4.1.2 for definitions 
+uint32_t sig0(uint_t x);
+uint32_t sig1(uint_t x);
+
+// See section 3.2 for definitions
+uint_t rotr(uint_t n, uint_t x);
+uint_t shr(uint_t n, uint_t x);
 
 int main(int argc, char *argv[]) {
     
@@ -48,7 +55,27 @@ void sha256() {
 
     // from page 22, W[t] = ...
     for (t = 16; t < 64; t++){
-        SIG_1(W[t-2]) + W[t-7] + SIG_0(W[t-15]) + W[t-16];
+        sig_1(W[t-2]) + W[t-7] + sig_0(W[t-15]) + W[t-16];
     }// for
 
 }// sha256 function
+
+// See section 3.2 and 4.1.2 for definitions
+uint_t rotr(uint_t n, uint_t x){
+    return (x >> n | (x << (32 - n)));
+}
+
+// See section 3.2 and 4.1.2 for definitions
+uint_t shr(uint_t n, uint_t x){
+    return (x >> n);
+}
+
+// See section 3.2 and 4.1.2 for definitions
+uint32_t sig0(uint_t x){
+    return (rotr(7, x) ^ rotr(18, x) ^ shr(3, x));
+}
+
+// See section 3.2 and 4.1.2 for definitions
+uint32_t sig1(uint_t x){
+    return(rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
+}
