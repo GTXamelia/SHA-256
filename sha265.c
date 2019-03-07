@@ -63,19 +63,19 @@ void sha256() {
 // See section 3.2 and 4.1.2 for definitions
 uint_t rotr(uint_t n, uint_t x){
     return (x >> n | (x << (32 - n)));
-}
+}// rotr function
 
 // See section 3.2 and 4.1.2 for definitions
 uint_t shr(uint_t n, uint_t x){
     return (x >> n);
-}
+}// shr function
 
 // See section 3.2 and 4.1.2 for definitions
 uint32_t sig0(uint_t x){
     return (rotr(7, x) ^ rotr(18, x) ^ shr(3, x));
-}
+}// sig0 function
 
 // See section 3.2 and 4.1.2 for definitions
 uint32_t sig1(uint_t x){
     return(rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
-}
+}// sig1 function
