@@ -55,14 +55,14 @@ void sha256() {
 
     // from page 22, W[t] = ...
     for (t = 16; t < 64; t++){
-        sig_1(W[t-2]) + W[t-7] + sig_0(W[t-15]) + W[t-16];
+        sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
     }// for
 
 }// sha256 function
 
 // See section 3.2 and 4.1.2 for definitions
 uint_t rotr(uint_t n, uint_t x){
-    return (x >> n | (x << (32 - n)));
+    return (x >> n) | (x << (32 - n));
 }// rotr function
 
 // See section 3.2 and 4.1.2 for definitions
