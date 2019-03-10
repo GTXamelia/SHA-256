@@ -1,25 +1,26 @@
-// The usual input/output header file
-#include <stdio.h>
 // For using fixed bit length integers
+#include <stdio.h>
+
+// The usual input/output header file
 #include <stdint.h>
 
 void sha256();
 
 // See section 4.1.2 for definitions 
-uint32_t sig0(uint_t x);
-uint32_t sig1(uint_t x);
+uint32_t sig0(uint32_t x);
+uint32_t sig1(uint32_t x);
 
 // See section 3.2 for definitions
-uint_t rotr(uint_t n, uint_t x);
-uint_t shr(uint_t n, uint_t x);
+uint32_t rotr(uint32_t n, uint32_t x);
+uint32_t shr(uint32_t n, uint32_t x);
 
 // See section 4.1.2 for definitions 
-uint_t SIG0(uint_t x);
-uint_t SIG1(uint_t x);
+uint32_t SIG0(uint32_t x);
+uint32_t SIG1(uint32_t x);
 
 // See section 4.1.2 for definitions 
-uint_t Ch(uint_t x, uint_t y, uint_t z);
-uint_t Maj(uint_t x, uint_t y, uint_t z);
+uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
+uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
 
 int main(int argc, char *argv[]) {
     
@@ -31,8 +32,8 @@ int main(int argc, char *argv[]) {
 
 void sha256() {
 
-    // The K Constants
-    uint_t K[] = {
+    // The K Constants defined in section 4.2.2
+    uint32_t K[] = {
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -49,7 +50,7 @@ void sha256() {
         0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 
         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-    }
+    };
 
     // Message schedule (section 6.2)
     uint32_t W[64];
@@ -72,20 +73,23 @@ void sha256() {
     };
 
     // The current message block
-    uint32_t M[16];
+    uint32_t M[16] = {0, 0, 0, 0, 0, 0, 0, 0};
 
     // For looping
-    int t;
+    int i, t;
+
+    // Loop through message block as per page 22
+    for(i = 0; i < 1; i++) {
     
     // From page 22, W[t] = M[t] for 0 <= t <= 15
     for(t = 0; t < 16; t++){
         W[t] = M[t];
-    }// for
+    };// for
 
     // from page 22, W[t] = ...
     for (t = 16; t < 64; t++){
         W[t] = sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
-    }// for
+    };// for
 
     // Initialize a, b, c, d, e, f, g, h as per step 2, page 22 
     a = H[0]; 
@@ -121,41 +125,44 @@ void sha256() {
     H[6] = g + H[6];
     H[7] = h + H[7];
 
+    printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+
+    }
 
 }// sha256 function
 
 // See section 3.2 and 4.1.2 for definitions
-uint_t rotr(uint_t n, uint_t x){
+uint32_t rotr(uint32_t n, uint32_t x){
     return (x >> n) | (x << (32 - n));
 }// rotr function
 
 // See section 3.2 and 4.1.2 for definitions
-uint_t shr(uint_t n, uint_t x){
+uint32_t shr(uint32_t n, uint32_t x){
     return (x >> n);
 }// shr function
 
 // See section 3.2 and 4.1.2 for definitions
-uint32_t sig0(uint_t x){
+uint32_t sig0(uint32_t x){
     return (rotr(7, x) ^ rotr(18, x) ^ shr(3, x));
 }// sig0 function
 
 // See section 3.2 and 4.1.2 for definitions
-uint32_t sig1(uint_t x){
+uint32_t sig1(uint32_t x){
     return (rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
 }// sig1 function
 
-uint_t SIG0(uint_t x){
+uint32_t SIG0(uint32_t x){
     return (rotr(2, x) ^ rotr(13, x) ^ rotr(22, x));
 }// SIG0 function
 
-uint_t SIG1(uint_t x){
+uint32_t SIG1(uint32_t x){
     return (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x));
 }// SIG1 function
 
-uint_t Ch(uint_t x, uint_t y, uint_t z){
+uint32_t Ch(uint32_t x, uint32_t y, uint32_t z){
     return ((x & y) ^ ((!x) & z));
 }// Ch function
 
-uint_t Maj(uint_t x, uint_t y, uint_t z){
+uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
     return ((x & y) ^ (x & z) ^ (y & z));
 }// Maj function
