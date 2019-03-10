@@ -13,6 +13,14 @@ uint32_t sig1(uint_t x);
 uint_t rotr(uint_t n, uint_t x);
 uint_t shr(uint_t n, uint_t x);
 
+// See section 4.1.2 for definitions 
+uint_t SIG0(uint_t x);
+uint_t SIG1(uint_t x);
+
+// See section 4.1.2 for definitions 
+uint_t Ch(uint_t x, uint_t y, uint_t z);
+uint_t Maj(uint_t x, uint_t y, uint_t z);
+
 int main(int argc, char *argv[]) {
     
     sha256();
@@ -55,7 +63,7 @@ void sha256() {
 
     // from page 22, W[t] = ...
     for (t = 16; t < 64; t++){
-        sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
+        W[t] = sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
     }// for
 
     // Initialize a, b, c, d, e, f, g, h as per step 2, page 22 
@@ -82,6 +90,17 @@ void sha256() {
         a = T1 + T2;
     }
 
+    //  Step 4.
+    H[0] = a + H[0];
+    H[1] = b + H[1];
+    H[2] = c + H[2];
+    H[3] = d + H[3];
+    H[4] = e + H[4];
+    H[5] = f + H[5];
+    H[6] = g + H[6];
+    H[7] = h + H[7];
+
+
 }// sha256 function
 
 // See section 3.2 and 4.1.2 for definitions
@@ -103,3 +122,19 @@ uint32_t sig0(uint_t x){
 uint32_t sig1(uint_t x){
     return(rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
 }// sig1 function
+
+uint_t SIG0(uint_t x){
+    
+}// SIG0 function
+
+uint_t SIG1(uint_t x){
+    
+}// SIG1 function
+
+uint_t Ch(uint_t x, uint_t y, uint_t z){
+    
+}// Ch function
+
+uint_t Maj(uint_t x, uint_t y, uint_t z){
+    
+}// Maj function
