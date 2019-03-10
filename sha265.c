@@ -78,8 +78,8 @@ void sha256() {
 
     // Step 3
     for(t = 0; t < 64; t++){
-        T1 = h + SIG_1(e) + Ch(e, f, g) + K[t] + W[t];
-        T2 = SIG_0(a) + Maj(a, b, c);
+        T1 = h + SIG1(e) + Ch(e, f, g) + K[t] + W[t];
+        T2 = SIG0(a) + Maj(a, b, c);
         h = g;
         g = f;
         f = e;
@@ -120,21 +120,21 @@ uint32_t sig0(uint_t x){
 
 // See section 3.2 and 4.1.2 for definitions
 uint32_t sig1(uint_t x){
-    return(rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
+    return (rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
 }// sig1 function
 
 uint_t SIG0(uint_t x){
-    
+    return (rotr(2, x) ^ rotr(13, x) ^ rotr(22, x));
 }// SIG0 function
 
 uint_t SIG1(uint_t x){
-    
+    return (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x));
 }// SIG1 function
 
 uint_t Ch(uint_t x, uint_t y, uint_t z){
-    
+    return ((x & y) ^ ((!x) & z));
 }// Ch function
 
 uint_t Maj(uint_t x, uint_t y, uint_t z){
-    
+    return ((x & y) ^ (x & z) ^ (y & z));
 }// Maj function
