@@ -36,10 +36,17 @@ enum status {READ, PAD0, PAD1, FINISH};
 
 int main(int argc, char *argv[]) {
 
+    // Open the file
     FILE* f;
     f = fopen(argv[1], "r");
+
+    // TODO ERROR CHECKING
     
+    // Run the secure hash algorithm on the file
     sha256(f);
+
+    // Close the file
+    fclose(f);
 
     return 0;
 }// main function
@@ -217,39 +224,44 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
         return 1;
     }
 
-    
+    // If we get down here, we haven't finished reading the file
+    nobytes = fread(M->e, 1, 64, f);
 
-    while (S == READ) {
-        nobytes = fread(M.e, 1, 64, f);
-        printf("Read %2llu bytes\n", nobytes);
-        nobits = nobits + (nobytes * 8);
-        if (nobytes < 56) {
-            printf("I've found a block with less than 55 bytes!\n");
-            M.e[nobytes] = 0x80;
-            while (nobytes < 56) {
-                nobytes = nobytes + 1;
-                M.e[nobytes] = 0x00;
-            }
-            M.s[7] = nobits;
-            S = FINISH;
-        } else if (nobytes < 64) {
-            S = PAD0;
-            M.e[nobytes] = 0x80;
-            while (nobytes < 64) {
-                nobytes = nobytes + 1;
-                M.e[nobytes] = 0x80;
-            }
-        } else if (feof(f)) {
-            S = PAD1;
+    // Keep track of the number of bytes we've read
+    *nobits = nobits + (nobytes * 8);
+
+    // If we read less than 56 bytes, we can put all padding in this message block
+    if (nobytes < 56) {
+        // Add the one bit, as per the standard
+        M->e[nobytes] = 0x80;
+
+        // Add zero bits until the last 64
+        while (nobytes < 56) {
+            nobytes = nobytes + 1;
+            M->e[nobytes] = 0x00;
         }
+
+        // Append the file size in bits as a (should be big endian) unsigned 64 bit int
+        M->s[7] = nobits;
+
+        // Tell S we are finished
+        *S = FINISH;
+    // Otherwise check if we can put some padding into this message block
+    } else if (nobytes < 64) {
+        // Tell S we need another message block with padding but no one bit
+        *S = PAD0;
+        // Put the one bit into the current block
+        M->e[nobytes] = 0x80;
+        // Pad the rest of the block with zero bits
+        while (nobytes < 64) {
+            nobytes = nobytes + 1;
+            M->e[nobytes] = 0x80;
+        }
+    // Otherwise check if we're just at the end of the file
+    } else if (feof(f)) {
+        *S = PAD1;
     }
 
-        // Close file
-    fclose(f);
-
-    for(int i = 0; i < 64; i++)
-        printf("%x ", M.e[i]);
-    printf("\n");
-
-    return 0;
+    // Continue while loop
+    return 1;
 }
