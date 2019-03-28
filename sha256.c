@@ -33,29 +33,11 @@ union msgblock {
 // A flag for where we are in the reading file
 enum status {READ, PAD0, PAD1, FINISH};
 
-void sha256();
+void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes);
 
 int nextmsgblock(FILE *f, union msgblock *M, enum status *S, uint64_t *nobits);
 
 int main(int argc, char *argv[]) {
-
-    // Open the file
-    FILE* msgf;
-    msgf = fopen(argv[1], "r");
-
-    // TODO ERROR CHECKING
-    
-    // Run the secure hash algorithm on the file
-    sha256(msgf);
-
-    // Close the file
-    fclose(msgf);
-
-    return 0;
-}// main function
-
-
-void sha256(FILE* msgf) {
 
     // Windows console settings
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -65,6 +47,40 @@ void sha256(FILE* msgf) {
     // Save current attributes
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     saved_attributes = consoleInfo.wAttributes;
+
+    // File parameter
+    FILE* msgf;
+
+    // User input char array
+    char userInput[32];
+
+    SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+    printf("Please enter the name of the file you would like to hash: ");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+    scanf("%s", userInput);
+
+    // Open file
+    msgf = fopen(userInput, "r");
+
+    if (msgf == NULL) {
+        SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+        printf("Error reading file. Please ensure the filename is correct! \n");
+    }else {
+        // Run the secure hash algorithm on the file
+        sha256(msgf, hConsole, saved_attributes);
+
+        // Close the file
+        fclose(msgf);
+    }
+
+    // Restore original console settings before exit
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+
+    return 0;
+}// main function
+
+
+void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
 
     // The current message block
     union msgblock M;
@@ -117,6 +133,7 @@ void sha256(FILE* msgf) {
 
     // For looping
     int i = 0, t;
+    int bytes;
 
     // Loop through message block as per page 22
     while(nextmsgblock(msgf, &M, &S, &nobits)) {
@@ -167,17 +184,14 @@ void sha256(FILE* msgf) {
         H[6] = g + H[6];
         H[7] = h + H[7];
 
-        int bytes = 64 * i;
-
-        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-        printf("%d bytes total hashed:\n", bytes);
-
-        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
-        printf("[%08x%08x%08x%08x%08x%08x%08x%08x]\n\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+        bytes = 64 * i;
     }
 
-    // Restore original console settings
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+    printf("\n%d bytes read, File Hash:\n", bytes);
+
+    SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+    printf("[%08x%08x%08x%08x%08x%08x%08x%08x]\n\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
 
 }// sha256 function
 
