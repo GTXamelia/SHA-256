@@ -4,9 +4,8 @@
 // The usual input/output header file
 #include <stdint.h>
 
-void sha256();
-
-int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits);
+// Win32 API
+#include <windows.h>
 
 // See section 4.1.2 for definitions 
 uint32_t sig0(uint32_t x);
@@ -34,25 +33,38 @@ union msgblock {
 // A flag for where we are in the reading file
 enum status {READ, PAD0, PAD1, FINISH};
 
+void sha256();
+
+int nextmsgblock(FILE *f, union msgblock *M, enum status *S, uint64_t *nobits);
+
 int main(int argc, char *argv[]) {
 
     // Open the file
-    FILE* f;
-    f = fopen(argv[1], "r");
+    FILE* msgf;
+    msgf = fopen(argv[1], "r");
 
     // TODO ERROR CHECKING
     
     // Run the secure hash algorithm on the file
-    sha256(f);
+    sha256(msgf);
 
     // Close the file
-    fclose(f);
+    fclose(msgf);
 
     return 0;
 }// main function
 
 
-void sha256(FILE* f) {
+void sha256(FILE* msgf) {
+
+    // Windows console settings
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    // Save current attributes
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
 
     // The current message block
     union msgblock M;
@@ -104,10 +116,12 @@ void sha256(FILE* f) {
     };
 
     // For looping
-    int i, t;
+    int i = 0, t;
 
     // Loop through message block as per page 22
-    while(nextmsgblock(f, M, S, nobits)) {
+    while(nextmsgblock(msgf, &M, &S, &nobits)) {
+
+        i++;
     
         // From page 22, W[t] = M[t] for 0 <= t <= 15
         for(t = 0; t < 16; t++){
@@ -153,8 +167,17 @@ void sha256(FILE* f) {
         H[6] = g + H[6];
         H[7] = h + H[7];
 
-        printf("%x %x %x %x %x %x %x %x\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
+        int bytes = 64 * i;
+
+        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+        printf("%d bytes total hashed:\n", bytes);
+
+        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+        printf("[%08x%08x%08x%08x%08x%08x%08x%08x]\n\n", H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7]);
     }
+
+    // Restore original console settings
+    SetConsoleTextAttribute(hConsole, saved_attributes);
 
 }// sha256 function
 
@@ -194,7 +217,7 @@ uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
     return ((x & y) ^ (x & z) ^ (y & z));
 }// Maj function
 
-int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
+int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits) {
 
     // The number of bytes we get fread
     uint64_t nobytes;
@@ -208,12 +231,12 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
     }
 
     // Otherwise check if we need another blockfull of padding
-    if (*SS == PAD0 || *S == PAD1) {
+    if (*S == PAD0 || *S == PAD1) {
         // Set first 56 bytes to all zero bytes
         for (i = 0; i < 56; i++) 
             M->e[i] = 0x80;
         // Set the last 64 bits to the number of bits in the file (should be big-endian)
-        M->s[7] = nobits;
+        M->s[7] = *nobits;
         // Tell S we are finished
         *S = FINISH;
         // If S was PAD1 then set the first bit of M to one
@@ -225,10 +248,10 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
     }
 
     // If we get down here, we haven't finished reading the file
-    nobytes = fread(M->e, 1, 64, f);
+    nobytes = fread(M->e, 1, 64, msgf);
 
     // Keep track of the number of bytes we've read
-    *nobits = nobits + (nobytes * 8);
+    *nobits = *nobits + (nobytes * 8);
 
     // If we read less than 56 bytes, we can put all padding in this message block
     if (nobytes < 56) {
@@ -242,7 +265,7 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
         }
 
         // Append the file size in bits as a (should be big endian) unsigned 64 bit int
-        M->s[7] = nobits;
+        M->s[7] = *nobits;
 
         // Tell S we are finished
         *S = FINISH;
@@ -258,7 +281,7 @@ int nextmsgblock(FILE *f, union msgblock *M, enum status *S, int *nobits) {
             M->e[nobytes] = 0x80;
         }
     // Otherwise check if we're just at the end of the file
-    } else if (feof(f)) {
+    } else if (feof(msgf)) {
         *S = PAD1;
     }
 
