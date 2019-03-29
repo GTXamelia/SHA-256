@@ -7,21 +7,21 @@
 // Win32 API
 #include <windows.h>
 
-// See section 4.1.2 for definitions 
-uint32_t sig0(uint32_t x);
-uint32_t sig1(uint32_t x);
-
 // See section 3.2 for definitions
-uint32_t rotr(uint32_t n, uint32_t x);
-uint32_t shr(uint32_t n, uint32_t x);
+#define rotr(x, n) (((x) >> n) | ((x) << (32 - n)))
+#define shr(x, n) (x >> n)
 
 // See section 4.1.2 for definitions 
-uint32_t SIG0(uint32_t x);
-uint32_t SIG1(uint32_t x);
+#define sig0(x) (rotr(7, x) ^ rotr(18, x) ^ shr(3, x))
+#define sig1(x) (rotr(17, x) ^ rotr(19, x) ^ shr(10, x))
 
 // See section 4.1.2 for definitions 
-uint32_t Ch(uint32_t x, uint32_t y, uint32_t z);
-uint32_t Maj(uint32_t x, uint32_t y, uint32_t z);
+#define SIG0(x) (rotr(2, x) ^ rotr(13, x) ^ rotr(22, x))
+#define SIG1(x) (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x))
+
+// See section 4.1.2 for definitions 
+#define Ch(x, y, z) ((x & y) ^ ((!x) & z))
+#define Maj(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
 
 // Represents a message block
 union msgblock {
@@ -195,42 +195,6 @@ void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
 
 }// sha256 function
 
-// See section 3.2 and 4.1.2 for definitions
-uint32_t rotr(uint32_t n, uint32_t x){
-    return (x >> n) | (x << (32 - n));
-}// rotr function
-
-// See section 3.2 and 4.1.2 for definitions
-uint32_t shr(uint32_t n, uint32_t x){
-    return (x >> n);
-}// shr function
-
-// See section 3.2 and 4.1.2 for definitions
-uint32_t sig0(uint32_t x){
-    return (rotr(7, x) ^ rotr(18, x) ^ shr(3, x));
-}// sig0 function
-
-// See section 3.2 and 4.1.2 for definitions
-uint32_t sig1(uint32_t x){
-    return (rotr(17, x) ^ rotr(19, x) ^ shr(10, x));
-}// sig1 function
-
-uint32_t SIG0(uint32_t x){
-    return (rotr(2, x) ^ rotr(13, x) ^ rotr(22, x));
-}// SIG0 function
-
-uint32_t SIG1(uint32_t x){
-    return (rotr(6, x) ^ rotr(11, x) ^ rotr(25, x));
-}// SIG1 function
-
-uint32_t Ch(uint32_t x, uint32_t y, uint32_t z){
-    return ((x & y) ^ ((!x) & z));
-}// Ch function
-
-uint32_t Maj(uint32_t x, uint32_t y, uint32_t z){
-    return ((x & y) ^ (x & z) ^ (y & z));
-}// Maj function
-
 int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits) {
 
     // The number of bytes we get fread
@@ -247,12 +211,16 @@ int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
     // Otherwise check if we need another blockfull of padding
     if (*S == PAD0 || *S == PAD1) {
         // Set first 56 bytes to all zero bytes
-        for (i = 0; i < 56; i++) 
+        for (i = 0; i < 56; i++) {
             M->e[i] = 0x80;
+        }
+           
         // Set the last 64 bits to the number of bits in the file (should be big-endian)
         M->s[7] = *nobits;
+
         // Tell S we are finished
         *S = FINISH;
+        
         // If S was PAD1 then set the first bit of M to one
         if (*S == PAD1) 
             M->e[0] = 0x80;
