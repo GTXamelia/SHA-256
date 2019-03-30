@@ -16,12 +16,12 @@
 #define rotr(a,b) (((a) >> (b)) | ((a) << (32-(b))))
 
 // See section 4.1.2 for definitions 
-#define sig0(x) (rotr(x,2) ^ rotr(x,13) ^ rotr(x,22))
-#define sig1(x) (rotr(x,6) ^ rotr(x,11) ^ rotr(x,25))
+#define SIG0(x) (rotr(x,2) ^ rotr(x,13) ^ rotr(x,22))
+#define SIG1(x) (rotr(x,6) ^ rotr(x,11) ^ rotr(x,25))
 
 // See section 4.1.2 for definitions 
-#define SIG0(x) (rotr(x,7) ^ rotr(x,18) ^ ((x) >> 3))
-#define SIG1(x) (rotr(x,17) ^ rotr(x,19) ^ ((x) >> 10))
+#define sig0(x) (rotr(x,7) ^ rotr(x,18) ^ ((x) >> 3))
+#define sig1(x) (rotr(x,17) ^ rotr(x,19) ^ ((x) >> 10))
 
 // See section 4.1.2 for definitions 
 #define Ch(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
