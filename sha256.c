@@ -22,13 +22,18 @@ int main(int argc, char *argv[]) {
     // User input char array
     char userInput[32];
 
-    SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
-    printf("Please enter the name of the file you would like to hash: ");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
-    scanf("%s", userInput);
+    if (argv[1] == NULL){
+        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+        printf("Please enter the name of the file you would like to hash: ");
+        SetConsoleTextAttribute(hConsole, saved_attributes);
+        scanf("%s", userInput);
 
-    // Open file
-    msgf = fopen(userInput, "r");
+        // Open file
+        msgf = fopen(userInput, "r");
+    } else {
+        // Open file
+        msgf = fopen(argv[1], "r");
+    }
 
     if (msgf == NULL) {
         SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
