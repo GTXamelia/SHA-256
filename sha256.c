@@ -59,26 +59,6 @@ void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
     // The status of the message blocks, in terms of padding
     enum status S = READ;
 
-    // The K Constants defined in section 4.2.2
-    uint32_t K[] = {
-        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
-        0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
-        0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-        0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
-        0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-        0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 
-        0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-        0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 
-        0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-        0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 
-        0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-        0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 
-        0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 
-        0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-    };
-
     // Message schedule (section 6.2)
     uint32_t W[64];
     // Working variables (section 6.2))
@@ -110,12 +90,12 @@ void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
     
         // From page 22, W[t] = M[t] for 0 <= t <= 15
         for(t = 0; t < 16; t++){
-            W[t] = M.t[t];
+            W[t] = SWAP_UINT32(M.t[t]) ;
         };// for
 
         // from page 22, W[t] = ...
         for (t = 16; t < 64; t++){
-            W[t] = sig1(W[t-2]) + W[t-7] + sig0(W[t-15]) + W[t-16];
+            W[t] = SIG1(W[t - 2]) + W[t - 7] + SIG0(W[t - 15]) + W[t - 16];
         };// for
 
         // Initialize a, b, c, d, e, f, g, h as per step 2, page 22 
@@ -130,8 +110,8 @@ void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
 
         // Step 3
         for(t = 0; t < 64; t++){
-            T1 = h + SIG1(e) + Ch(e, f, g) + K[t] + W[t];
-            T2 = SIG0(a) + Maj(a, b, c);
+            T1 = h + sig1(e) + Ch(e, f, g) + K[t] + W[t];
+            T2 = sig0(a) + Maj(a, b, c);
             h = g;
             g = f;
             f = e;
@@ -184,7 +164,7 @@ int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
         }
            
         // Set the last 64 bits to the number of bits in the file (should be big-endian)
-        M->s[7] = *nobits;
+        M->s[7] = SWAP_UINT64(*nobits);
 
         // Tell S we are finished
         *S = FINISH;
@@ -215,7 +195,7 @@ int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
         }
 
         // Append the file size in bits as a (should be big endian) unsigned 64 bit int
-        M->s[7] = *nobits;
+        M->s[7] = SWAP_UINT64(*nobits);
 
         // Tell S we are finished
         *S = FINISH;
