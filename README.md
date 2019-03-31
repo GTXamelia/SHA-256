@@ -85,6 +85,8 @@ Fixing this issue took time to figure out which parts of the code needed to be c
 
 Once I had researched completely how to deal with endianness in C I was able to get the correct hash when comparing to examples online.
 
+STATUS: FIXED
+
 ### Newline 
 During development and testing I encountered and error when running the algorithm on Windows devices. When I looked further into the error specific to the OS, I found that files with a newline control character caused the hash to differ from the hash online and Linux. The specific character was in hex the '0D' which is followed by '0A' in Windows. This control character reffers to the 
 <a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">CRLF</a> which is the windows standard for newline. The first character (0D) is the carriage control character which is not used in Linux, Linux and mac OS use LF control character.
@@ -100,6 +102,11 @@ The text file is:
 3(33)
 
 The hash algorithm had no problem adding the carriage to the hashing process but it caused the hash to differ from examples online.
+This problem is Windows specific due to the fact it reads and writes newlines as \r\n (CRLF), while Linux used \n (LF). The carriage causes an issue when hashing a file and compairing to online examples online.
+
+STATUS: Linux works / Windows fails on newline files due to CRLF
+
+SOLUTION: Fixing the issue for Windows could be done by filtering the '0D' byte from the message block by skipping it when read. Or creat a temp file that is a copy of the original except for all carriage bytes are removed and use that to hash and then delete after hash. The first option would be more effieicent and less resource intense.
 
 ## Extras
 
