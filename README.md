@@ -1,3 +1,5 @@
+<img src="https://imgur.com/SqwiPf7.png"></img>
+
 # SHA256 (Secure Hash Algorithm 256)
 This is the SHA256 hashing algorithm which takes input data (files) and turns it into an output of a fixed length.
 This SHA256 was written in C as part of my studies in GMIT in the Theory of Algorithms module.
