@@ -6,7 +6,7 @@ This SHA256 was written in C as part of my studies in GMIT in the Theory of Algo
 
 ### Prerequisites
 
-1. <a href="https://gcc.gnu.org/install/download.html">Install gcc</a>
+1. <a href="https://gcc.gnu.org/install/download.html">Install C compiler (GCC)</a>
 2. <a href="https://github.com/cian2009/SHA-256/archive/master.zip">Clone repo</a>
 
 ### Running the Program
@@ -14,11 +14,11 @@ First compile the program using gcc
 
 > gcc -o sha256 sha256.c .\sha256.h
 
-This command will compile sha256.c and include the sha256.h header file into and exectuable (.exe)
+This command will compile sha256.c and include the sha256.h header file into and executable (.exe)
 
 #### Method 1
 1. Open CMD in the project directory
-2. run the executable .sha256
+2. Run the executable sha256.exe
 
 You will then see this screen prompting the user to enter the file they would like to get the hash for:
 
@@ -38,7 +38,7 @@ The second method involves adding the file name as a launch argument:
 
 <img src="https://imgur.com/bmVBszA.png"></img>
 
-This was a second option added as a convience during development testing.
+This was a second option added as a convenience during development testing.
 
 ## Tests
 
@@ -51,8 +51,8 @@ EXPECTED OUTPUT: <img src="https://imgur.com/yiUzdBP.png">
 
 <img src="https://imgur.com/3rfPcnW.png">
 
-RESULT: Sucessfull!
-The sha256 algorithm sucessfully pads block lower than 64 bytes (Only 3 bytes in this case)
+RESULT: Successful!
+The sha256 algorithm successfully pads block lower than 64 bytes (Only 3 bytes in this case)
 
 ### Large File
 
@@ -62,32 +62,32 @@ EXPECTED OUTPUT: <img src="https://imgur.com/nSmHX65.png">
 
 <img src="https://imgur.com/pT3r8gO.png">
 
-RESULT: Sucessfull!
-The algorithms sucessfully runs through the large file and adds the block together to get the correct hash of the file.
+RESULT: Successful!
+The algorithms successfully  runs through the large file and adds the block together to get the correct hash of the file.
 
 ### Wrong/No File Found
 
-Test the program to see how it handles a user entering a file that doesn't exsist
+Test the program to see how it handles a user entering a file that doesn't exist.
 
 EXPECTED OUTPUT: User told file was not found
 
 <img src="https://imgur.com/HNCNsEW.png">
 
-RESULT: Sucessfull!
+RESULT: Successful!
 User is informed that the requested file to be hashed couldn't be hashed.
 
 ## Problems Encountered
 
 ### Endianess 
-During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash would be wrong when compared to others. The <a href="https://www.nist.gov/publications/secure-hash-standard">SHA256 documentation</a> asks for the input to be in big endian value so it can be corectly hashed and tested to others to ensure correct hashing.
+During early development it was found that the program was reading files in little endian format. This caused the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash would be wrong when compared to others. The <a href="https://www.nist.gov/publications/secure-hash-standard">SHA256 documentation</a> asks for the input to be in big endian value so it can be correctly hashed and tested to others to ensure correct hashing.
 
-Fixing this issue took time to figure out which parts of the code needed to be converted to big endian, and how they would be achieved. First attempts were aimed at the file reader 'fopen' and 'fread' to see if there was any built in functionality that I could offload the work to. This failed and the next part was to research how and what needed to be converted. The latter part was easy the former took most of that time. Multiple articles and posts talking about endianness and how to solve it in both directions. A good source I found was from <a href="https://developer.ibm.com/articles/au-endianc/">IBM</a>, they talked about its affects and differences.
+Fixing this issue took time to figure out which parts of the code needed to be converted to big endian, and how they would be achieved. First attempts were aimed at the file reader 'fopen' and 'fread' to see if there was any built in functionality that I could offload the work to. This failed and the next part was to research how and what needed to be converted. The latter part was easy the former took most of that time. Multiple articles and posts talking about endianness and how to solve it in both directions. A good source I found was from <a href="https://developer.ibm.com/articles/au-endianc/">IBM</a>, they talked about its effects and differences.
 
 Once I had researched completely how to deal with endianness in C I was able to get the correct hash when comparing to examples online.
 
 ### Newline 
-During development and testing I encounted and error when running the algorithm on Windows devices. When I looked further into the error specific to the OS, I found that files with a newline control character caused the hash to differ from the hash online and linux. The specific character was in hex the '0D' which is followed by '0A' in Windows. This control character reffers to the 
-<a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">CRLF</a> which is the windows standard for newline. The first character (0D) is the carriage control character which is not used in linux, linux and mac OS use LF control character.
+During development and testing I encountered and error when running the algorithm on Windows devices. When I looked further into the error specific to the OS, I found that files with a newline control character caused the hash to differ from the hash online and Linux. The specific character was in hex the '0D' which is followed by '0A' in Windows. This control character reffers to the 
+<a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">CRLF</a> which is the windows standard for newline. The first character (0D) is the carriage control character which is not used in Linux, Linux and mac OS use LF control character.
 
 Below is an example of how a file is read when using CRLF:
 
@@ -103,8 +103,8 @@ The hash algorithm had no problem adding the carriage to the hashing process but
 
 ## Extras
 
-1. <a href="https://github.com/cian2009/SHA-256/blob/master/sha256.h">Header File</a> - The header file was used to clean up the main block of code in sha256.c by offloading basic function/macros, imports and constanats.
-2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI imporvment was added to the project by adding colour the CMD using the Console API.
+1. <a href="https://github.com/cian2009/SHA-256/blob/master/sha256.h">Header File</a> - The header file was used to clean up the main block of code in sha256.c by offloading basic function/macros, imports and constants.
+2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI improvement was added to the project by adding colour the CMD using the Console API.
 
 ## Tools
 1. <a href="https://git-scm.com/">GIT</a> - Version control used during project development
