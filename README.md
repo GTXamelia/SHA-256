@@ -24,9 +24,21 @@ You will then see this screen prompting the user to enter the file they would li
 
 <img src="https://imgur.com/rKpW5sM.png"></img>
 
+Enter in the file you would like to hash and it will return a result:
 
+<img src="https://imgur.com/Lv9E6so.png"></img>
+
+Note the result will also who the number of bytes hashed this includes the padding.
 
 #### Method 2
+1. Open CMD in the project directory
+2. run the executable .sha256 (FILE HERE)
+
+The second method involves adding the file name as a launch argument:
+
+<img src="https://imgur.com/bmVBszA.png"></img>
+
+This was a second option added as a convience during development testing.
 
 ## Tests
 
