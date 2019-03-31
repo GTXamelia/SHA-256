@@ -107,11 +107,11 @@ The hash algorithm had no problem adding the carriage to the hashing process but
 2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI imporvment was added to the project by adding colour the CMD using the Console API.
 
 ## Tools
-1. <a>GIT</a>
-2. <a>GitHub</a>
-3. <a>Hash Online</a>
-4. <a>Online Hex Editor</a> 
-5. <a>GCC</a>
+1. <a href="https://git-scm.com/">GIT</a> - Version control used during project development
+2. <a href="https://github.com">GitHub</a> - Web-based hosting service for version control using Git
+3. <a href="https://www.fileformat.info/tool/hash.htm">Hash Online</a> - Online hashing website
+4. <a href="https://www.onlinehexeditor.com/">Online Hex Editor</a> - Online hex editor
+5. <a href="https://gcc.gnu.org/">GCC</a> - C compiler
 
 ## Sources
 1. <a href="https://github.com/cian2009/SHA-256/blob/master/project.pdf">Project Outline</a>
