@@ -102,7 +102,7 @@ void sha256(FILE* msgf, HANDLE hConsole, WORD saved_attributes) {
     
         // From page 22, W[t] = M[t] for 0 <= t <= 15
         for(t = 0; t < 16; t++){
-            W[t] = SWAP_UINT32(M.t[t]) ;
+            W[t] = SWAP_UINT32(M.t[t]);
         };// for
 
         // from page 22, W[t] = ...
@@ -223,7 +223,7 @@ int nextmsgblock(FILE *msgf, union msgblock *M, enum status *S, uint64_t *nobits
         // Pad the rest of the block with zero bits
         while (nobytes < 64) {
             nobytes = nobytes + 1;
-            M->e[nobytes] = 0x80;
+            M->e[nobytes] = 0x00;
         }
     // Otherwise check if we're just at the end of the file
     } else if (feof(msgf)) {

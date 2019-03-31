@@ -27,6 +27,8 @@
 #define Ch(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
 #define Maj(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 
+#define IS_BIG_ENDIAN (!*(unsigned char *)&(uint16_t){1})
+
 // Used for fixing endiness
 #define SWAP_UINT32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) | (((x) & 0x0000FF00) << 8) | ((x) << 24))
 #define SWAP_UINT64(x) \
