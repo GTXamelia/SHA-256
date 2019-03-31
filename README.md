@@ -42,10 +42,14 @@ This was a second option added as a convience during development testing.
 
 ## Tests
 
-## Problems & Solutions
+## Problems Encountered
 
 ### Endianess 
-During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash woul be wrong.
+During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash would be wrong when compared to others. The SHA256 documentaion asks for the input to be in big endian value so it can be corectly hashed and tested to others to ensure correct hashing.
+
+Fixing this issue took time to figure out which parts of the code needed to be converted to big endian, and how they would be achieved. First attempts were aimed at the file reader 'fopen' and 'fread' to see if there was any built in functionality that I could offload the work to. This failed and the next part was to research how and what needed to be converted. The latter part was easy the former took most of that time. Multiple articles and posts talking about endianness and how to solve it in both directions. A good source I found was from <a href="https://developer.ibm.com/articles/au-endianc/">IBM</a>, they talked about its affects and differences.
+
+Once I had researched completely how to deal with endianness in C I was able to get the correct hash when comparing to examples online.
 
 ### Newline 
 During development and testing I encounted and error when running the algorithm on Windows devices. When I looked further into the error specific to the OS, I found that files with a newline control character caused the hash to differ from the hash online and linux. The specific character was in hex the '0D' which is followed by '0A' in Windows. This control character reffers to the 
