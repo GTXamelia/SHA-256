@@ -131,6 +131,7 @@ SOLUTION: Fixing the issue for Windows could be done by filtering the '0D' byte 
 5. <a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">Difference between CR LF, LF and CR</a>
 6. <a href="https://www.w3schools.in/c-tutorial/c-header-files/">Header Files</a>
 7. <a href="https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func">Swap Endian in C</a>
+8. <a href="https://docs.microsoft.com/en-us/windows/console/console-functions">Console API</a>
 
 ## Built With
 
