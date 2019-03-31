@@ -2,7 +2,7 @@
 This is the SHA256 hashing algorithm which takes input data (files) and turns it into an output of a fixed length.
 This SHA256 was written in C as part of my studies in GMIT in the Theory of Algorithms module.
 
-## Setup
+## Setup and Usage
 
 ### Prerequisites
 
@@ -42,11 +42,10 @@ This was a second option added as a convience during development testing.
 
 ## Tests
 
-### Windows (Windows 7 & 10)
-
-### Linux (Ubuntu)
-
 ## Problems & Solutions
+
+### Endianess 
+During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash woul be wrong.
 
 ### Newline 
 During development and testing I encounted and error when running the algorithm on Windows devices. When I looked further into the error specific to the OS, I found that files with a newline control character caused the hash to differ from the hash online and linux. The specific character was in hex the '0D' which is followed by '0A' in Windows. This control character reffers to the 
@@ -65,5 +64,8 @@ The text file is:
 The hash algorithm had no problem adding the carriage to the hashing process but it caused the hash to differ from examples online.
 
 ## Extras
+
+1. <a href="https://github.com/cian2009/SHA-256/blob/master/sha256.h">Header File</a> - The header file was used to clean up the main block of code in sha256.c by offloading basic function/macros, imports and constanats.
+2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI imporvment was added to the project by adding colour the CMD using the Console API.
 
 ## Sources
