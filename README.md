@@ -73,3 +73,9 @@ The hash algorithm had no problem adding the carriage to the hashing process but
 2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI imporvment was added to the project by adding colour the CMD using the Console API.
 
 ## Sources
+1. <a href="https://github.com/cian2009/SHA-256/blob/master/project.pdf">Project Outline</a>
+2. <a href="https://www.nist.gov/publications/secure-hash-standard">Secure Hash Standard</a>
+3. <a href="http://www.open-std.org/jtc1/sc22/wg14/">ISO/IEC 9899 - Programming Languages - C</a>
+4. <a href="https://developer.ibm.com/articles/au-endianc/">Writing Endian-Independent Code in C</a>
+5. <a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">Difference between CR LF, LF and CR</a>
+6. <a href="https://www.w3schools.in/c-tutorial/c-header-files/">Header Files</a>
