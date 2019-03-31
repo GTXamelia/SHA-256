@@ -42,6 +42,17 @@ This was a second option added as a convience during development testing.
 
 ## Tests
 
+### Padding Test 
+
+To test padding of files I've used a small file containing only 3 character 'abc' the total byte number is 3.
+With only 3 bytes padding will run and pad the remaining bytes with '0' to ensure the hash algorithm runs correctly.
+
+EXPECTED OUTPUT: <img src="https://imgur.com/yiUzdBP.png">
+
+<img src="https://imgur.com/3rfPcnW.png">
+
+RESULT: Sucessfull
+
 ## Problems Encountered
 
 ### Endianess 
