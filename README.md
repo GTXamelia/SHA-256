@@ -45,7 +45,7 @@ This was a second option added as a convience during development testing.
 ## Problems Encountered
 
 ### Endianess 
-During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash would be wrong when compared to others. The SHA256 documentaion asks for the input to be in big endian value so it can be corectly hashed and tested to others to ensure correct hashing.
+During early development it was found that the program was reading files in little endian format. This casued the hash to work, but not work correctly. The hash would return a string of correct length but due to reading little endian the hash would be wrong when compared to others. The <a href="https://www.nist.gov/publications/secure-hash-standard">SHA256 documentation</a> asks for the input to be in big endian value so it can be corectly hashed and tested to others to ensure correct hashing.
 
 Fixing this issue took time to figure out which parts of the code needed to be converted to big endian, and how they would be achieved. First attempts were aimed at the file reader 'fopen' and 'fread' to see if there was any built in functionality that I could offload the work to. This failed and the next part was to research how and what needed to be converted. The latter part was easy the former took most of that time. Multiple articles and posts talking about endianness and how to solve it in both directions. A good source I found was from <a href="https://developer.ibm.com/articles/au-endianc/">IBM</a>, they talked about its affects and differences.
 
@@ -79,3 +79,4 @@ The hash algorithm had no problem adding the carriage to the hashing process but
 4. <a href="https://developer.ibm.com/articles/au-endianc/">Writing Endian-Independent Code in C</a>
 5. <a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">Difference between CR LF, LF and CR</a>
 6. <a href="https://www.w3schools.in/c-tutorial/c-header-files/">Header Files</a>
+7. <a href="https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func">Swap Endian in C</a>
