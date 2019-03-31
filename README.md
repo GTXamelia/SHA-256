@@ -111,6 +111,9 @@ STATUS: Linux works / Windows fails on newline files due to CRLF
 
 SOLUTION: Fixing the issue for Windows could be done by filtering the '0D' byte from the message block by skipping it when read. Or creat a temp file that is a copy of the original except for all carriage bytes are removed and use that to hash and then delete after hash. The first option would be more effieicent and less resource intense.
 
+### Conclusion
+The algorithm works as intended but has difficulty with how windows processes new lines.
+
 ## Extras
 
 1. <a href="https://github.com/cian2009/SHA-256/blob/master/sha256.h">Header File</a> - The header file was used to clean up the main block of code in sha256.c by offloading basic function/macros, imports and constants.
