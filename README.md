@@ -52,6 +52,7 @@ EXPECTED OUTPUT: <img src="https://imgur.com/yiUzdBP.png">
 <img src="https://imgur.com/3rfPcnW.png">
 
 RESULT: Successful!
+
 The sha256 algorithm successfully pads block lower than 64 bytes (Only 3 bytes in this case)
 
 ### Large File
@@ -63,6 +64,7 @@ EXPECTED OUTPUT: <img src="https://imgur.com/nSmHX65.png">
 <img src="https://imgur.com/pT3r8gO.png">
 
 RESULT: Successful!
+
 The algorithms successfully  runs through the large file and adds the block together to get the correct hash of the file.
 
 ### Wrong/No File Found
@@ -74,6 +76,7 @@ EXPECTED OUTPUT: User told file was not found
 <img src="https://imgur.com/HNCNsEW.png">
 
 RESULT: Successful!
+
 User is informed that the requested file to be hashed couldn't be hashed.
 
 ## Problems Encountered
@@ -128,3 +131,13 @@ SOLUTION: Fixing the issue for Windows could be done by filtering the '0D' byte 
 5. <a href="https://stackoverflow.com/questions/1552749/difference-between-cr-lf-lf-and-cr-line-break-types">Difference between CR LF, LF and CR</a>
 6. <a href="https://www.w3schools.in/c-tutorial/c-header-files/">Header Files</a>
 7. <a href="https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func">Swap Endian in C</a>
+
+## Built With
+
+* [Visual Studio Code](https://code.visualstudio.com/) - IDE used during development
+* [C](https://en.wikipedia.org/wiki/C_(programming_language)) - Programming laguage used
+* [GCC](https://gcc.gnu.org/) -  GNU Compiler Collection which includes a C compiler
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
