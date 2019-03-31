@@ -51,7 +51,30 @@ EXPECTED OUTPUT: <img src="https://imgur.com/yiUzdBP.png">
 
 <img src="https://imgur.com/3rfPcnW.png">
 
-RESULT: Sucessfull
+RESULT: Sucessfull!
+The sha256 algorithm sucessfully pads block lower than 64 bytes (Only 3 bytes in this case)
+
+### Large File
+
+To fully test the algorithm I will test a large file which will test to see if it is correctly adding the blocks of 64 bytes together and getting the expected hash at the end.
+
+EXPECTED OUTPUT: <img src="https://imgur.com/nSmHX65.png">
+
+<img src="https://imgur.com/pT3r8gO.png">
+
+RESULT: Sucessfull!
+The algorithms sucessfully runs through the large file and adds the block together to get the correct hash of the file.
+
+### Wrong/No File Found
+
+Test the program to see how it handles a user entering a file that doesn't exsist
+
+EXPECTED OUTPUT: User told file was not found
+
+<img src="https://imgur.com/HNCNsEW.png">
+
+RESULT: Sucessfull!
+User is informed that the requested file to be hashed couldn't be hashed.
 
 ## Problems Encountered
 
@@ -82,6 +105,13 @@ The hash algorithm had no problem adding the carriage to the hashing process but
 
 1. <a href="https://github.com/cian2009/SHA-256/blob/master/sha256.h">Header File</a> - The header file was used to clean up the main block of code in sha256.c by offloading basic function/macros, imports and constanats.
 2. <a href="https://docs.microsoft.com/en-us/windows/console/setconsoletextattribute">Colour</a> - A small UI imporvment was added to the project by adding colour the CMD using the Console API.
+
+## Tools
+1. <a>GIT</a>
+2. <a>GitHub</a>
+3. <a>Hash Online</a>
+4. <a>Online Hex Editor</a> 
+5. <a>GCC</a>
 
 ## Sources
 1. <a href="https://github.com/cian2009/SHA-256/blob/master/project.pdf">Project Outline</a>
